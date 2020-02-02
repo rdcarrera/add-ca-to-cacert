@@ -1,0 +1,35 @@
+#!/bin/bash
+    function PrintMesg()
+    {
+        echo " `date +%s` | add-ca-to-cacert | $1 | $2"
+    }
+    banner ${BANNER_MESSAGE}
+    echo -e " ---------------------------------------"
+    if [ $# -ne 0 ];then
+        exec $@
+    else
+        PrintMesg "START" "Starting Process"
+        for _i in `find ${CERTS_FOLDER}/ -type f`;do
+            aliasCer="`echo ${_i}  |awk -F/ '{ print $NF }' \
+                            | awk -F. '{ print $1 }' \
+                            | tr '[:upper:]' '[:lower:]'`"
+            PrintMesg "ADDCA" "Adding cert ${_i} ${aliasCer}"
+            if ! ${KEYTOOL_BIN} -list --keystore ${CACERT_PATH} \
+            --storepass "${CACERT_PASS}" -noprompt  |grep "${aliasCer}" &> /dev/null;then
+                ! ${KEYTOOL_BIN} --import --file ${_i} --alias "${aliasCer}" \
+                --keystore ${CACERT_PATH} --storepass "${CACERT_PASS}" -noprompt &> /dev/null \
+                && PrintMesg "ERROR" "CERT_IMPORT ${_i}" \
+                && echo -e " ---------------------------------------" \
+                && exit 1
+            else
+                PrintMesg "EXIST" "Cert ${_i} really exist"
+            fi
+        done
+        PrintMesg "COPY " "Copy cacerts to dest folder"
+        ! cp -f ${CACERT_PATH} ${CACERT_DEST} && PrintMesg "ERROR" "Copy ${CACERT_PATH} to ${CACERT_DEST}"
+        PrintMesg " END " "Process ended"
+    fi
+    echo -e " ---------------------------------------"
+    exit 0
+
+
