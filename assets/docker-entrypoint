@@ -26,7 +26,7 @@
             fi
         done
         PrintMesg "COPY " "Copy cacerts to dest folder"
-        ! cp -f ${CACERT_PATH} ${CACERT_DEST} && PrintMesg "ERROR" "Copy ${CACERT_PATH} to ${CACERT_DEST}"
+        ! cp -f ${CACERT_PATH} ${CACERT_DEST} && PrintMesg "ERROR" "Copy ${CACERT_PATH} to ${CACERT_DEST}" && exit 1
         PrintMesg " END " "Process ended"
     fi
     echo -e " ---------------------------------------"
