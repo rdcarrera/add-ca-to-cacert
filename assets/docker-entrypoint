@@ -18,10 +18,10 @@
                             | awk -F. '{ print $1 }' \
                             | tr '[:upper:]' '[:lower:]'`"
             PrintMesg "ADDCA" "Adding cert ${_i} ${aliasCer}"
-            if ! ${KEYTOOL_BIN} -list --keystore ${CACERT_DEST} \
+            if ! ${KEYTOOL_BIN} -list --keystore ${CACERT_DEST}/cacerts \
             --storepass "${CACERT_PASS}" -noprompt  |grep "${aliasCer}" &> /dev/null;then
                 ! ${KEYTOOL_BIN} --import --file ${_i} --alias "${aliasCer}" \
-                --keystore ${CACERT_DEST} --storepass "${CACERT_PASS}" -noprompt &> /dev/null \
+                --keystore ${CACERT_DEST}/cacerts --storepass "${CACERT_PASS}" -noprompt &> /dev/null \
                 && PrintMesg "ERROR" "CERT_IMPORT ${_i}" \
                 && echo -e " ---------------------------------------" \
                 && exit 1
