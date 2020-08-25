@@ -13,7 +13,7 @@
           PrintMesg "COPY " "Copy cacerts to dest folder"
           ! cp -f ${CACERT_PATH} ${CACERT_DEST} && PrintMesg "ERROR" "Copy ${CACERT_PATH} to ${CACERT_DEST}" && exit 1
         fi
-        for _i in `find ${CERTS_FOLDER}/ -type f`;do
+        for _i in `find ${CERTS_FOLDER}/ -maxdepth ${FIND_MAX_DEPTH:-1} -type f -name "*${CERTS_EXTENSION}"`;do
             aliasCer="`echo ${_i}  |awk -F/ '{ print $NF }' \
                             | awk -F. '{ print $1 }' \
                             | tr '[:upper:]' '[:lower:]'`"
