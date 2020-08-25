@@ -9,15 +9,19 @@
         exec $@
     else
         PrintMesg "START" "Starting Process"
+        if [ ! -f ${CACERT_DEST} ];then
+          PrintMesg "COPY " "Copy cacerts to dest folder"
+          ! cp -f ${CACERT_PATH} ${CACERT_DEST} && PrintMesg "ERROR" "Copy ${CACERT_PATH} to ${CACERT_DEST}" && exit 1
+        fi
         for _i in `find ${CERTS_FOLDER}/ -type f`;do
             aliasCer="`echo ${_i}  |awk -F/ '{ print $NF }' \
                             | awk -F. '{ print $1 }' \
                             | tr '[:upper:]' '[:lower:]'`"
             PrintMesg "ADDCA" "Adding cert ${_i} ${aliasCer}"
-            if ! ${KEYTOOL_BIN} -list --keystore ${CACERT_PATH} \
+            if ! ${KEYTOOL_BIN} -list --keystore ${CACERT_DEST} \
             --storepass "${CACERT_PASS}" -noprompt  |grep "${aliasCer}" &> /dev/null;then
                 ! ${KEYTOOL_BIN} --import --file ${_i} --alias "${aliasCer}" \
-                --keystore ${CACERT_PATH} --storepass "${CACERT_PASS}" -noprompt &> /dev/null \
+                --keystore ${CACERT_DEST} --storepass "${CACERT_PASS}" -noprompt &> /dev/null \
                 && PrintMesg "ERROR" "CERT_IMPORT ${_i}" \
                 && echo -e " ---------------------------------------" \
                 && exit 1
@@ -25,8 +29,6 @@
                 PrintMesg "EXIST" "Cert ${_i} really exist"
             fi
         done
-        PrintMesg "COPY " "Copy cacerts to dest folder"
-        ! cp -f ${CACERT_PATH} ${CACERT_DEST} && PrintMesg "ERROR" "Copy ${CACERT_PATH} to ${CACERT_DEST}" && exit 1
         PrintMesg " END " "Process ended"
     fi
     echo -e " ---------------------------------------"
