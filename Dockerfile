@@ -5,6 +5,7 @@ FROM $IMAGE_REPOSITORY/$IMAGE_NAME:$IMAGE_TAG
 
 ENV BANNER_MESSAGE="ADDING-CA" \
     CERTS_FOLDER=/certs \
+    CERTS_EXTENSION="pem" \
     KEYTOOL_BIN=/usr/java/latest/bin/keytool \
     CACERT_PATH=/usr/java/latest/lib/security/cacerts \
     CACERT_PASS='changeit' \
