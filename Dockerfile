@@ -9,7 +9,7 @@ ENV BANNER_MESSAGE="ADDING-CA" \
     KEYTOOL_BIN=/usr/java/latest/bin/keytool \
     CACERT_PATH=/usr/java/latest/lib/security/cacerts \
     CACERT_PASS='changeit' \
-    CACERT_DEST=/cacert/cacerts
+    CACERT_DEST=/cacert
 
 ADD ./assets /assets
 
