@@ -18,6 +18,7 @@ RUN chmod +x /assets/docker-entrypoint \
 &&  yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-${VERSION%.*}.noarch.rpm \
 &&  yum -y install banner \
 &&  mkdir -p ${CERTS_FOLDER} \
-&&  mkdir -p ${CACERT_DEST}
+&&  mkdir -p ${CACERT_DEST} \
+&& chmod 777 ${CACERT_DEST}
 
 ENTRYPOINT ["/assets/docker-entrypoint"]
